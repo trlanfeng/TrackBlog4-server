@@ -5,12 +5,12 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { IsString, IsInt, Max, Min } from 'class-validator';
-import { Category } from '../categories/category.entity';
 
 @Entity()
-export class Article {
+export class Category {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,10 +20,7 @@ export class Article {
 
   @Column()
   @IsString()
-  content: string;
-
-  @ManyToOne(type => Category)
-  category: Category;
+  description: string;
 
   @CreateDateColumn()
   createAt: Date;

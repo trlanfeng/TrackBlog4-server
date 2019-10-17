@@ -5,6 +5,8 @@ import { AdminsModule } from './admins/admins.module';
 import { Admin } from './admins/admin.entity';
 import { ArticlesModule } from './articles/articles.module';
 import { Article } from './articles/article.entity';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/category.entity';
 
 const databaseConfig = {
   type: process.env.DB_TYPE as any,
@@ -13,7 +15,7 @@ const databaseConfig = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [Admin, Article],
+  entities: [Admin, Article, Category],
   synchronize: true,
 };
 
@@ -23,6 +25,7 @@ const databaseConfig = {
     AuthModule,
     AdminsModule,
     ArticlesModule,
+    CategoriesModule,
   ],
   providers: [],
   controllers: [],
