@@ -1,0 +1,40 @@
+import { Injectable, HttpException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Series } from './series.entity';
+
+@Injectable()
+export class SeriesService {
+  constructor(
+    @InjectRepository(Series) private readonly seriesRepo: Repository<Series>,
+  ) {}
+
+  async findOneById(id: number): Promise<Series> {
+    const series = await this.seriesRepo.findOne(id);
+    if (!series) {
+      throw new HttpException('指定栏目不存在', 404);
+    }
+    return series;
+  }
+
+  async findAll(where: any = {}): Promise<[Series[], number]> {
+    return await this.seriesRepo.findAndCount({ where });
+  }
+
+  async create(series: Series): Promise<Series> {
+    delete series.id;
+    return await this.seriesRepo.save(series);
+  }
+
+  async update(id: number, series: Series): Promise<void> {
+    await this.findOneById(id);
+    delete series.id;
+    await this.seriesRepo.update(id, series);
+  }
+  
+  async delete(id: number): Promise<void> {
+    await this.findOneById(id);
+    await this.seriesRepo.delete(id);
+  }
+}
