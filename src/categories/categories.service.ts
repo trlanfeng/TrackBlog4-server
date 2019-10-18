@@ -13,7 +13,7 @@ export class CategoriesService {
   async findOneById(id: number): Promise<Category> {
     const category = await this.categoryRepo.findOne(id);
     if (!category) {
-      throw new HttpException('指定文章不存在', 404);
+      throw new HttpException('指定栏目不存在', 404);
     }
     return category;
   }

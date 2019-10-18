@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Article } from './article.entity';
 import { PassportModule } from '@nestjs/passport';
+import { CategoriesModule } from '../categories/categories.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PassportModule } from '@nestjs/passport';
         expiresIn: 7200,
       },
     }),
+    CategoriesModule,
   ],
   controllers: [ArticlesController],
   providers: [ArticlesService],

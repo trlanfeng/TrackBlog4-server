@@ -19,19 +19,24 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserRole } from '../common/enums';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { CategoriesService } from '../categories/categories.service';
 
 @Controller('articles')
 export class ArticlesController {
   constructor(
     private readonly articlesService: ArticlesService,
     private readonly jwtService: JwtService,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   @Post()
   @Roles(UserRole.ADMIN_NORMAL, UserRole.ADMIN_SUPER)
   @UseGuards(AuthGuard(), RolesGuard)
   @UsePipes(ValidationPipe)
-  async create(@Headers() headers, @Body() article: Article) {
+  async create(@Headers() headers, @Body() article) {
+    const category = await this.categoriesService.findOneById(article.category);
+    delete article.id;
+    article.category = category;
     await this.articlesService.create(article);
     return { message: '创建成功' };
   }

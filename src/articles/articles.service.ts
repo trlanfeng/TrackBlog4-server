@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Article } from './article.entity';
+import { Category } from '../categories/category.entity';
 
 @Injectable()
 export class ArticlesService {
@@ -23,7 +24,6 @@ export class ArticlesService {
   }
 
   async create(article: Article): Promise<Article> {
-    delete article.id;
     return await this.articleRepo.save(article);
   }
 

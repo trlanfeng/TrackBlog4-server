@@ -5,6 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { IsString, IsInt, Max, Min } from 'class-validator';
 import { Category } from '../categories/category.entity';
@@ -21,6 +22,9 @@ export class Article {
   @Column()
   @IsString()
   content: string;
+
+  @Column({ nullable: true })
+  categoryId: number;
 
   @ManyToOne(type => Category)
   category: Category;
