@@ -8,11 +8,14 @@ import { Category } from '../categories/category.entity';
 @Injectable()
 export class ArticlesService {
   constructor(
-    @InjectRepository(Article) private readonly articleRepo: Repository<Article>,
+    @InjectRepository(Article)
+    private readonly articleRepo: Repository<Article>,
   ) {}
 
   async findOneById(id: number): Promise<Article> {
-    const article = await this.articleRepo.findOne(id);
+    const article = await this.articleRepo.findOne(id, {
+      relations: ['category', 'series', 'tags'],
+    });
     if (!article) {
       throw new HttpException('指定文章不存在', 404);
     }
@@ -20,7 +23,10 @@ export class ArticlesService {
   }
 
   async findAll(where: any = {}): Promise<[Article[], number]> {
-    return await this.articleRepo.findAndCount({ where });
+    return await this.articleRepo.findAndCount({
+      where,
+      relations: ['category', 'tags'],
+    });
   }
 
   async create(article: Article): Promise<Article> {
@@ -32,7 +38,7 @@ export class ArticlesService {
     delete article.id;
     await this.articleRepo.update(id, article);
   }
-  
+
   async delete(id: number): Promise<void> {
     await this.findOneById(id);
     await this.articleRepo.delete(id);

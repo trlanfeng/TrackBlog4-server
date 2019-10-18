@@ -36,7 +36,9 @@ export class ArticlesController {
   async create(@Headers() headers, @Body() article) {
     const category = await this.categoriesService.findOneById(article.category);
     delete article.id;
-    article.category = category;
+    // article.category = category;
+    // article.series = null;
+    // article.tags = null;
     await this.articlesService.create(article);
     return { message: '创建成功' };
   }

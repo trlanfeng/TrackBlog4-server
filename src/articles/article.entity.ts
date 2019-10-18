@@ -6,9 +6,13 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
+  OneToMany,
+  ManyToMany,
 } from 'typeorm';
 import { IsString, IsInt, Max, Min } from 'class-validator';
 import { Category } from '../categories/category.entity';
+import { Series } from '../series/series.entity';
+import { Tag } from '../tags/tag.entity';
 
 @Entity()
 export class Article {
@@ -23,11 +27,17 @@ export class Article {
   @IsString()
   content: string;
 
-  @Column({ nullable: true })
-  categoryId: number;
+  // @Column({ nullable: true })
+  // categoryId: number;
 
-  @ManyToOne(type => Category)
+  @ManyToOne(type => Category, { nullable: true })
   category: Category;
+
+  @ManyToMany(type => Series, { nullable: true })
+  series: Series[];
+
+  @ManyToMany(type => Tag, { nullable: true })
+  tags: Tag[];
 
   @CreateDateColumn()
   createAt: Date;
