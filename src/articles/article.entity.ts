@@ -10,7 +10,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { IsString, IsInt, Max, Min } from 'class-validator';
+import { IsString, IsInt, Max, Min, IsBoolean } from 'class-validator';
 import { Category } from '../categories/category.entity';
 import { Series } from '../series/series.entity';
 import { Tag } from '../tags/tag.entity';
@@ -30,6 +30,10 @@ export class Article {
 
   // @Column({ nullable: true })
   // categoryId: number;
+
+  @Column({ default: false })
+  @IsBoolean()
+  isDraft: boolean;
 
   @ManyToOne(type => Category, { nullable: true })
   category: Category;

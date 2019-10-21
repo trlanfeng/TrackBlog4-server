@@ -13,13 +13,17 @@ export class TagsService {
   async findOneById(id: number): Promise<Tag> {
     const tag = await this.tagRepo.findOne(id);
     if (!tag) {
-      throw new HttpException('指定栏目不存在', 404);
+      throw new HttpException('指定标签不存在', 404);
     }
     return tag;
   }
 
   async findAll(where: any = {}): Promise<[Tag[], number]> {
     return await this.tagRepo.findAndCount({ where });
+  }
+
+  async findByIds(ids: number[]): Promise<Tag[]> {
+    return await this.tagRepo.findByIds(ids);
   }
 
   async create(tag: Tag): Promise<Tag> {

@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Article } from './article.entity';
 import { PassportModule } from '@nestjs/passport';
 import { CategoriesModule } from '../categories/categories.module';
+import { SeriesModule } from '../series/series.module';
+import { TagsModule } from '../tags/tags.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { CategoriesModule } from '../categories/categories.module';
       },
     }),
     CategoriesModule,
+    SeriesModule,
+    TagsModule,
   ],
   controllers: [ArticlesController],
   providers: [ArticlesService],

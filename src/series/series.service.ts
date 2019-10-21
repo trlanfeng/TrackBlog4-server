@@ -13,13 +13,17 @@ export class SeriesService {
   async findOneById(id: number): Promise<Series> {
     const series = await this.seriesRepo.findOne(id);
     if (!series) {
-      throw new HttpException('指定栏目不存在', 404);
+      throw new HttpException('指定系列不存在', 404);
     }
     return series;
   }
 
   async findAll(where: any = {}): Promise<[Series[], number]> {
     return await this.seriesRepo.findAndCount({ where });
+  }
+
+  async findByIds(ids: number[]): Promise<Series[]> {
+    return await this.seriesRepo.findByIds(ids);
   }
 
   async create(series: Series): Promise<Series> {

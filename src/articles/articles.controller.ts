@@ -20,6 +20,8 @@ import { UserRole } from '../common/enums';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { CategoriesService } from '../categories/categories.service';
+import { SeriesService } from '../series/series.service';
+import { TagsService } from '../tags/tags.service';
 
 @Controller('articles')
 export class ArticlesController {
@@ -27,6 +29,8 @@ export class ArticlesController {
     private readonly articlesService: ArticlesService,
     private readonly jwtService: JwtService,
     private readonly categoriesService: CategoriesService,
+    private readonly seriesService: SeriesService,
+    private readonly tagsService: TagsService,
   ) {}
 
   @Post()
@@ -34,11 +38,13 @@ export class ArticlesController {
   @UseGuards(AuthGuard(), RolesGuard)
   @UsePipes(ValidationPipe)
   async create(@Headers() headers, @Body() article) {
-    const category = await this.categoriesService.findOneById(article.category);
     delete article.id;
-    // article.category = category;
-    // article.series = null;
-    // article.tags = null;
+    const category = await this.categoriesService.findOneById(article.category);
+    article.category = category;
+    const series = await this.seriesService.findByIds(article.series);
+    article.series = series;
+    const tags = await this.tagsService.findByIds(article.tags);
+    article.tags = tags;
     await this.articlesService.create(article);
     return { message: '创建成功' };
   }
@@ -61,7 +67,13 @@ export class ArticlesController {
   @Put(':id')
   @Roles(UserRole.ADMIN_NORMAL, UserRole.ADMIN_SUPER)
   @UseGuards(AuthGuard(), RolesGuard)
-  async update(@Param('id') id, @Body() article: Article) {
-    await this.articlesService.update(id, article);
+  async update(@Param('id') id, @Body() article) {
+    const category = await this.categoriesService.findOneById(article.category);
+    article.category = category;
+    const series = await this.seriesService.findByIds(article.series);
+    article.series = series;
+    const tags = await this.tagsService.findByIds(article.tags);
+    article.tags = tags;
+    await this.articlesService.update(article);
   }
 }

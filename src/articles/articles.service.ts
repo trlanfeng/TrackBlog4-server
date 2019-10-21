@@ -33,10 +33,8 @@ export class ArticlesService {
     return await this.articleRepo.save(article);
   }
 
-  async update(id: number, article: Article): Promise<void> {
-    await this.findOneById(id);
-    delete article.id;
-    await this.articleRepo.update(id, article);
+  async update(article: Article): Promise<void> {
+    await this.articleRepo.save(article);
   }
 
   async delete(id: number): Promise<void> {
