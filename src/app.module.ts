@@ -21,6 +21,7 @@ const databaseConfig = {
   database: process.env.DB_DATABASE,
   entities: [Admin, Article, Category, Series, Tag],
   synchronize: true,
+  charset: 'utf8mb4_unicode_520_ci'
 };
 
 @Module({
