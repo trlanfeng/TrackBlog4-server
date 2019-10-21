@@ -25,7 +25,7 @@ export class ArticlesService {
   async findAll(where: any = {}): Promise<[Article[], number]> {
     return await this.articleRepo.findAndCount({
       where,
-      relations: ['category', 'tags'],
+      relations: ['category', 'series', 'tags'],
     });
   }
 

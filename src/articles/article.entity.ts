@@ -8,6 +8,7 @@ import {
   JoinColumn,
   OneToMany,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { IsString, IsInt, Max, Min } from 'class-validator';
 import { Category } from '../categories/category.entity';
@@ -34,9 +35,11 @@ export class Article {
   category: Category;
 
   @ManyToMany(type => Series, { nullable: true })
+  @JoinTable()
   series: Series[];
 
   @ManyToMany(type => Tag, { nullable: true })
+  @JoinTable()
   tags: Tag[];
 
   @CreateDateColumn()
