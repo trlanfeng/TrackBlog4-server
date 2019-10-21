@@ -22,6 +22,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { CategoriesService } from '../categories/categories.service';
 import { SeriesService } from '../series/series.service';
 import { TagsService } from '../tags/tags.service';
+import { Tag } from '../tags/tag.entity';
 
 @Controller('articles')
 export class ArticlesController {
@@ -43,7 +44,8 @@ export class ArticlesController {
     article.category = category;
     const series = await this.seriesService.findByIds(article.series);
     article.series = series;
-    const tags = await this.tagsService.findByIds(article.tags);
+    const tagsIds = await this.tagsService.combineTags(article.tags);
+    const tags = await this.tagsService.findByIds(tagsIds);
     article.tags = tags;
     await this.articlesService.create(article);
     return { message: '创建成功' };
@@ -72,7 +74,8 @@ export class ArticlesController {
     article.category = category;
     const series = await this.seriesService.findByIds(article.series);
     article.series = series;
-    const tags = await this.tagsService.findByIds(article.tags);
+    const tagsIds = await this.tagsService.combineTags(article.tags);
+    const tags = await this.tagsService.findByIds(tagsIds);
     article.tags = tags;
     await this.articlesService.update(article);
   }

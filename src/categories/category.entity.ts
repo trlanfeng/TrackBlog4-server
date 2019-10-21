@@ -18,7 +18,7 @@ export class Category {
   @IsString()
   title: string;
 
-  @Column()
+  @Column({ default: '' })
   @IsString()
   description: string;
 

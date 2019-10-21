@@ -24,6 +24,10 @@ export class Article {
   @IsString()
   title: string;
 
+  @Column({ default: '' })
+  @IsString()
+  description: string;
+
   @Column()
   @IsString()
   content: string;

@@ -18,7 +18,7 @@ export class Tag {
   @IsString()
   title: string;
 
-  @Column()
+  @Column({ default: '' })
   @IsString()
   description: string;
 

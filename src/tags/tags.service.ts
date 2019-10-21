@@ -26,6 +26,24 @@ export class TagsService {
     return await this.tagRepo.findByIds(ids);
   }
 
+  async combineTags(tags: any[]): Promise<number[]> {
+    let tags_numbers: number[] = [],
+      tags_strings: string[] = [];
+    tags.forEach(item => {
+      if (typeof item === 'number') {
+        tags_numbers.push(item);
+      } else if (typeof item === 'string') {
+        tags_strings.push(item);
+      }
+    });
+    const tags_promises = tags_strings.map(item =>
+      this.create({ title: item } as Tag),
+    );
+    const tags_promises_result = await Promise.all(tags_promises);
+    tags_promises_result.forEach(item => tags_numbers.push(item.id));
+    return tags_numbers;
+  }
+
   async create(tag: Tag): Promise<Tag> {
     delete tag.id;
     return await this.tagRepo.save(tag);
@@ -36,7 +54,7 @@ export class TagsService {
     delete tag.id;
     await this.tagRepo.update(id, tag);
   }
-  
+
   async delete(id: number): Promise<void> {
     await this.findOneById(id);
     await this.tagRepo.delete(id);
