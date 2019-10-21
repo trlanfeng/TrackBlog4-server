@@ -26,6 +26,9 @@ export class ArticlesService {
     return await this.articleRepo.findAndCount({
       where,
       relations: ['category', 'series', 'tags'],
+      order: {
+        id: 'DESC'
+      }
     });
   }
 
