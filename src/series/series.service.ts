@@ -12,9 +12,7 @@ export class SeriesService {
 
   async findOneById(id: number): Promise<Series> {
     const series = await this.seriesRepo.findOne(id);
-    if (!series) {
-      throw new HttpException('指定系列不存在', 404);
-    }
+    if (!series) throw new HttpException('指定系列不存在', 404);
     return series;
   }
 
@@ -36,7 +34,7 @@ export class SeriesService {
     delete series.id;
     await this.seriesRepo.update(id, series);
   }
-  
+
   async delete(id: number): Promise<void> {
     await this.findOneById(id);
     await this.seriesRepo.delete(id);

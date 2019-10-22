@@ -7,14 +7,13 @@ import { Category } from './category.entity';
 @Injectable()
 export class CategoriesService {
   constructor(
-    @InjectRepository(Category) private readonly categoryRepo: Repository<Category>,
+    @InjectRepository(Category)
+    private readonly categoryRepo: Repository<Category>,
   ) {}
 
   async findOneById(id: number): Promise<Category> {
     const category = await this.categoryRepo.findOne(id);
-    if (!category) {
-      throw new HttpException('指定栏目不存在', 404);
-    }
+    if (!category) throw new HttpException('指定栏目不存在', 404);
     return category;
   }
 
@@ -32,7 +31,7 @@ export class CategoriesService {
     delete category.id;
     await this.categoryRepo.update(id, category);
   }
-  
+
   async delete(id: number): Promise<void> {
     await this.findOneById(id);
     await this.categoryRepo.delete(id);

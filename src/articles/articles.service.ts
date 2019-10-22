@@ -16,9 +16,7 @@ export class ArticlesService {
     const article = await this.articleRepo.findOne(id, {
       relations: ['category', 'series', 'tags'],
     });
-    if (!article) {
-      throw new HttpException('指定文章不存在', 404);
-    }
+    if (!article) throw new HttpException('指定文章不存在', 404);
     return article;
   }
 
@@ -27,8 +25,8 @@ export class ArticlesService {
       where,
       relations: ['category', 'series', 'tags'],
       order: {
-        id: 'DESC'
-      }
+        id: 'DESC',
+      },
     });
   }
 
