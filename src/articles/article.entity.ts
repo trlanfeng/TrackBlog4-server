@@ -39,6 +39,10 @@ export class Article {
   @IsBoolean()
   isDraft: boolean;
 
+  @Column({ default: false })
+  @IsBoolean()
+  isDeleted: boolean;
+
   @ManyToOne(type => Category, { nullable: true })
   category: Category;
 
