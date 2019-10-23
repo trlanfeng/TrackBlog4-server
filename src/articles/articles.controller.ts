@@ -23,6 +23,8 @@ import { CategoriesService } from '../categories/categories.service';
 import { SeriesService } from '../series/series.service';
 import { TagsService } from '../tags/tags.service';
 import { Tag } from '../tags/tag.entity';
+import { Category } from '../categories/category.entity';
+import { Series } from '../series/series.entity';
 
 @Controller('articles')
 export class ArticlesController {
@@ -40,13 +42,7 @@ export class ArticlesController {
   @UsePipes(ValidationPipe)
   async create(@Headers() headers, @Body() article) {
     delete article.id;
-    const category = await this.categoriesService.findOneById(article.category);
-    article.category = category;
-    const series = await this.seriesService.findByIds(article.series);
-    article.series = series;
-    const tagsIds = await this.tagsService.combineTags(article.tags);
-    const tags = await this.tagsService.findByIds(tagsIds);
-    article.tags = tags;
+    article = await this.handleAdditionalInfo(article);
     await this.articlesService.create(article);
     return { message: '创建成功' };
   }
@@ -70,13 +66,49 @@ export class ArticlesController {
   @Roles(UserRole.ADMIN_NORMAL, UserRole.ADMIN_SUPER)
   @UseGuards(AuthGuard(), RolesGuard)
   async update(@Param('id') id, @Body() article) {
-    const category = await this.categoriesService.findOneById(article.category);
-    article.category = category;
-    const series = await this.seriesService.findByIds(article.series);
-    article.series = series;
-    const tagsIds = await this.tagsService.combineTags(article.tags);
-    const tags = await this.tagsService.findByIds(tagsIds);
-    article.tags = tags;
+    article = await this.handleAdditionalInfo(article);
     await this.articlesService.update(article);
+  }
+
+  async handleAdditionalInfo(article) {
+    if (article.category) {
+      const category = await this.categoriesService.findOneById(
+        article.category,
+      );
+      article.category = category;
+    }
+    if (article.series) {
+      const series = await this.seriesService.findByIds(article.series);
+      article.series = series;
+    }
+    if (article.tags) {
+      const tagsIds = await this.tagsService.combineTags(article.tags);
+      const tags = await this.tagsService.findByIds(tagsIds);
+      article.tags = tags;
+    }
+    return article;
+  }
+
+  @Post('import')
+  async importArticle(@Body() article) {
+    if (article.category) {
+      const category = await this.categoriesService.create({
+        title: article.category,
+      } as Category);
+      article.category = category;
+    }
+    if (article.series) {
+      const series = await this.seriesService.create({
+        title: article.series,
+      } as Series);
+      article.series = series;
+    }
+    if (article.tags) {
+      const tagsIds = await this.tagsService.combineTags(article.tags);
+      const tags = await this.tagsService.findByIds(tagsIds);
+      article.tags = tags;
+    }
+    await this.articlesService.create(article);
+    return { message: `导入成功：${article.id} : ${article.title}` };
   }
 }

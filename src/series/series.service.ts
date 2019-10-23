@@ -16,6 +16,14 @@ export class SeriesService {
     return series;
   }
 
+  async findByTitle(title: string): Promise<Series> {
+    return await this.seriesRepo.findOne({
+      where: {
+        title,
+      },
+    });
+  }
+
   async findAll(where: any = {}): Promise<[Series[], number]> {
     return await this.seriesRepo.findAndCount({ where });
   }
@@ -25,6 +33,8 @@ export class SeriesService {
   }
 
   async create(series: Series): Promise<Series> {
+    const series_finded = await this.findByTitle(series.title);
+    if (series_finded) return series_finded;
     delete series.id;
     return await this.seriesRepo.save(series);
   }

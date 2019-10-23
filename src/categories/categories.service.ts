@@ -17,11 +17,21 @@ export class CategoriesService {
     return category;
   }
 
+  async findByTitle(title: string): Promise<Category> {
+    return await this.categoryRepo.findOne({
+      where: {
+        title,
+      },
+    });
+  }
+
   async findAll(where: any = {}): Promise<[Category[], number]> {
     return await this.categoryRepo.findAndCount({ where });
   }
 
   async create(category: Category): Promise<Category> {
+    const category_finded = await this.findByTitle(category.title);
+    if (category_finded) return category_finded;
     delete category.id;
     return await this.categoryRepo.save(category);
   }

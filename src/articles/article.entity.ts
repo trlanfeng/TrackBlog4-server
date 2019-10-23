@@ -28,7 +28,7 @@ export class Article {
   @IsString()
   description: string;
 
-  @Column()
+  @Column('text')
   @IsString()
   content: string;
 
